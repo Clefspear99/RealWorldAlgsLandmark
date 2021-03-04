@@ -1,14 +1,28 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class PA2 {
     public static void main(String[] args){
 
-        int[] res = extractInts(2, "7 4");
-        System.out.println(res[0]+" "+res[1]);
+        try {
+            Edge[][] adjacencyList = load("Tiny2");
+            //System.out.println(adjacencyList[0].toString());
+        }
+        catch(IOException e){
+            System.err.println(e);
+        }
 
+    }
+
+    public static void printAdjacencyList(Edge[][] adjacencyList){
+        for(int i =0; i<adjacencyList.length; i++){
+            for(int j =0; j<adjacencyList[i].length; j++)
+                System.out.println(adjacencyList[i][j]);
+        }
     }
 
 
@@ -17,19 +31,29 @@ public class PA2 {
         int[] lineInt;
         String stringIn="";
         int curr=0;
+        List<Edge> allOfOne=new ArrayList<Edge>();
 
         BufferedReader inputFile = new BufferedReader(new FileReader("src/Data/"+fileName+".len"));
         lineInt=extractInts(2, inputFile.readLine());
 
-        out=new Edge[lineInt[0]][];
+        out=new Edge[lineInt[0]][0];
 
         while((stringIn = inputFile.readLine()) != null){
             lineInt=extractInts(3, stringIn);
-            if(curr==lin)
+            if(curr!=lineInt[0]){
+                out[curr] = allOfOne.toArray(new Edge[allOfOne.size()]);
+                allOfOne=new ArrayList<Edge>();
+                curr=lineInt[0];
+            }
+            allOfOne.add(new Edge(lineInt[0], lineInt[1], lineInt[2]));
         }
 
+        out[curr] = allOfOne.toArray(new Edge[allOfOne.size()]);
+        allOfOne=new ArrayList<Edge>();
 
-        return ;
+
+
+        return out;
     }
 
 
@@ -51,7 +75,7 @@ public class PA2 {
 
 }
 
-class Edge{
+class Edge {
     int source;
     int destination;
     int length;
@@ -60,6 +84,10 @@ class Edge{
         this.source = source;
         this.destination = destination;
         this.length = length;
+    }
+
+    public String toString(){
+        return "Source: "+source+"; Detination: "+destination+"; Length: "+length+";";
     }
 
     public int getSource() {
@@ -85,9 +113,10 @@ class Edge{
     public void setLength(int length) {
         this.length = length;
     }
+
 }
 
 
 //Java basic stuff:
 //https://www.guru99.com/buffered-reader-in-java.html
-https://stackoverflow.com/questions/17678862/reading-lines-with-bufferedreader-and-checking-for-end-of-file
+//https://stackoverflow.com/questions/17678862/reading-lines-with-bufferedreader-and-checking-for-end-of-file

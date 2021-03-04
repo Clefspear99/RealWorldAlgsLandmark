@@ -1,5 +1,3 @@
-package PA2;
-
 public class PriorityQueueElement<T> {
 
 	public int priority;
