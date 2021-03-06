@@ -7,16 +7,58 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class PA2 {
+
     public static void main(String[] args){
         node[] adjacencyList={};
-        try {
-            adjacencyList = loadLen("NewYork");
-        }
-        catch(IOException e){
-            System.err.println(e);
-        }
+
+        String[] fileNames = {"California", "Central", "Colorado", "East", "NewYork","NorthWest", "West", "USA"};
+
+        int aSpeed=0, aRelax=0,dSpeed=0, aTime = 0, dTime=0, dRelax=0, start, end;
+        int resA[];
+        int resD[];
+        int resB[];
 
 
+        long time = -1;
+
+
+        Random rand = new Random();
+        for(String loc:fileNames) {
+            try {
+                //adjacencyList = loadLen(loc);
+                //adjacencyList=loadLen("Tiny1", false);
+                adjacencyList=loadLen(loc);
+                System.out.println("Loaded!");
+            } catch (IOException e) {
+                System.err.println(e);
+            }
+            for (int i = 0; i < 1000; i++) {
+
+                start=rand.nextInt(adjacencyList.length);
+                end=rand.nextInt(adjacencyList.length);
+                for (node x : adjacencyList)
+                    x.reset();
+                time=System.currentTimeMillis();
+                resD = dijkstra(adjacencyList, start, end);
+                dTime+= System.currentTimeMillis() - time;
+                dRelax+=resD[1];
+
+
+                for (node x : adjacencyList)
+                    x.reset();
+                time = System.currentTimeMillis() - time;
+                //resA = aStarEuclidean(adjacencyList, start, end);
+                aTime += System.currentTimeMillis() - time;
+                aRelax+=resD[1];
+
+
+            }
+            System.out.println("for "+loc+"; Dijkstra average time "+(dTime/1000.0)+" ms; Average edges relaxed: "+(dRelax/1000.0));
+            System.out.println("for "+loc+"; A* euclidean average time "+(aTime/1000.0)+" ms  ; Average edges relaxed: "+(aRelax/1000.0));
+        }
+        }
+
+        /*
         Random rand = new Random();
         int start;
         int end;
@@ -45,7 +87,7 @@ public class PA2 {
 
         }
 
-        /*
+
         int[][] res = new int[7][7];
         for(int i =0; i<7; i++) {
             for (int j = 0; j < 7; j++) {
@@ -54,8 +96,8 @@ public class PA2 {
                 res[i][j] = dijkstra(adjacencyList, i, j)[0];
             }
         }
-        printRes(res);*/
-    }
+        printRes(res);
+    }*/
 
     public static void printRes(int[][] res){
         for(int i =0; i<res.length; i++){
@@ -219,6 +261,7 @@ public class PA2 {
         lineInt=extractInts(2, inputFile.readLine());
 
         node_out = new node[lineInt[0]];
+        System.out.println("Loading "+fileName+" Edges: "+lineInt[0]+" Vertices: "+lineInt[1]);
 
         for(int i =0; i<lineInt[0]; i++)
             node_out[i] = new node(i);
@@ -233,7 +276,7 @@ public class PA2 {
         for (node curr_n: node_out){
             curr_n.finalizeAdjacent();
         }
-
+        System.out.println("read CO");
         if(loadCo) {
             inputFile = new BufferedReader(new FileReader("src/Data/" + fileName + ".co"));
             lineInt = extractInts(2, inputFile.readLine());
@@ -463,3 +506,4 @@ class node{
 //https://stackoverflow.com/questions/17678862/reading-lines-with-bufferedreader-and-checking-for-end-of-file
 //https://stackoverflow.com/questions/9331837/returning-an-array-without-assign-to-a-variable
 //https://www.baeldung.com/java-generating-random-numbers-in-range
+//https://stackoverflow.com/questions/26827480/do-i-need-to-seed-manually-when-using-random-in-java
