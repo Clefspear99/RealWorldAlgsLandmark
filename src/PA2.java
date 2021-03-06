@@ -9,7 +9,7 @@ public class PA2 {
     public static void main(String[] args){
 
         try {
-            Edge[][] adjacencyList = load("Tiny2");
+            Edge[][] adjacencyList = loadLen("Tiny2");
             //System.out.println(adjacencyList[0].toString());
         }
         catch(IOException e){
@@ -26,7 +26,30 @@ public class PA2 {
     }
 
 
-    public static Edge[][] load(String fileName) throws IOException {
+    public static int dijkstra(Edge[][] graph, int source_in, int dest_in){
+        PriorityQueue<node> open = new PriorityQueue<node>();
+        List<node> closed=new ArrayList<node>();
+        node curr;
+        node source = new node(source_in);
+        source.setDistance(0);
+        open.setPriority(source, source.distance);
+
+        while(open.getSize()>0){
+            curr=open.getMinimumItem();
+            open.deleteMinimum();
+            closed.add(curr);
+            if(curr.getIdentity()==dest_in)
+                break;
+            for(int i =0; i<graph[curr.getIdentity()].length; i++){
+                if()
+            }
+
+
+        }
+
+    }
+
+    public static Edge[][] loadLen(String fileName) throws IOException {
         Edge[][] out;
         int[] lineInt;
         String stringIn="";
@@ -75,10 +98,47 @@ public class PA2 {
 
 }
 
+class node{
+    int identity;
+    int distance;
+    node parent;
+
+    public node(int identity) {
+        this.identity = identity;
+        this.distance=-1;
+        this.parent=null;
+    }
+
+    public int getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(int identity) {
+        this.identity = identity;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    public node getParent() {
+        return parent;
+    }
+
+    public void setParent(node parent) {
+        this.parent = parent;
+    }
+}
+
 class Edge {
     int source;
     int destination;
     int length;
+
 
     public Edge(int source, int destination, int length) {
         this.source = source;
@@ -116,6 +176,8 @@ class Edge {
 
 }
 
+//Algorithm info:
+//P2pShortestPath.pdf from canvas for this course
 
 //Java basic stuff:
 //https://www.guru99.com/buffered-reader-in-java.html
